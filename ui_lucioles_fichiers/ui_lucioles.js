@@ -1,9 +1,3 @@
-//
-// Cote UI de l'application "lucioles"
-//
-// Auteur : G.MENEZ
-// RMQ : Manipulation naive (debutant) de Javascript
-// 
 window.onload = function init() {
     let myData = [];
     macList = [];
@@ -12,7 +6,7 @@ window.onload = function init() {
         const index = macList.indexOf(mac);
         if (index == -1) {
         macList.push(mac);
-        myData.push({mac, temp: 0, light: 0});
+        myData.push({mac, temp: 0, light: 0, wifi: 0});
         return macList.length - 1;
         } else {
         return index;
@@ -24,16 +18,14 @@ window.onload = function init() {
             $("#mac"+index).text(data.mac);
             $("#temp"+index).text(data.temp);
             $("#light"+index).text(data.light);
+            $("#wifi"+index).text(data.wifi);
             $("#btn"+index).click(function(){
                 ping(data.mac);
             })
     }
     
-    //=== Initialisation des traces/charts de la page html
-
-    // Apply time settings globally
     Highcharts.setOptions({
-	global: { // https://stackoverflow.com/questions/13077518/highstock-chart-offsets-dates-for-no-reason
+	global: { 
             useUTC: false,
             type: 'spline'
 	},
@@ -42,7 +34,6 @@ window.onload = function init() {
 	}
     });
 
-    // cf https://jsfiddle.net/gh/get/library/pure/highcharts/highcharts/tree/master/samples/highcharts/demo/spline-irregular-time/
     var chart1 = new Highcharts.Chart({
         title: {
             text: 'Temperatures'
@@ -51,9 +42,6 @@ window.onload = function init() {
             text: 'Irregular time data in Highcharts JS'
 	},
         legend: {
-            //title: {
-            //    text: 'Temperatures'
-            //},
             enabled: true
         },
         credits: false,
@@ -74,7 +62,6 @@ window.onload = function init() {
 		 {name: 'ESP3', data: []},
 		],
 
-	//colors: ['#6CF', '#39F', '#06C', '#036', '#000'],
 	colors: ['red', 'green', 'blue'],
 	
         plotOptions: {
@@ -82,7 +69,6 @@ window.onload = function init() {
                 dataLabels: {
                     enabled: true
                 },
-                //color: "red",
                 enableMouseTracking: true
             }
         }
@@ -91,9 +77,6 @@ window.onload = function init() {
     var chart2 = new Highcharts.Chart({
         title: { text: 'Lights' },
         legend: {
-            //title: {
-            //    text: 'Lights'
-            //},
             enabled: true
         },
         credits: false,
@@ -127,21 +110,10 @@ window.onload = function init() {
     });
 
     
-    //=== Recuperation dans le Node JS server des samples de l'ESP et 
-    //=== Alimentation des charts ====================================
-
     function get_samples(path_on_node, serie, wh){
-	// path_on_node => help to compose url to get on Js node
-	// serie => for choosing chart/serie on the page
-	// wh => which esp do we want to query data
-	
-	//node_url = 'http://localhost:3000'
-	//node_url = 'http://10.9.128.189:3000'
-   // node_url = 'http://192.168.0.2:3000'
     node_url = 'http://62.210.139.84:3000'
     let topic = path_on_node.split("/")[2];
 
-	//https://openclassrooms.com/fr/courses/1567926-un-site-web-dynamique-avec-jquery/1569648-le-fonctionnement-de-ajax
         $.ajax({
             url: node_url.concat(path_on_node), // URL to "GET" : /esp/temp ou /esp/light
             type: 'GET',
@@ -151,7 +123,6 @@ window.onload = function init() {
                 let listeData = [];
                 resultat.forEach(function (element) {
             listeData.push([Date.parse(element.date),element.value]);
-		    //listeData.push([Date.now(),element.value]);
                 });
                 serie.setData(listeData); //serie.redraw();
                 let pos = searchMac(wh);
@@ -161,6 +132,9 @@ window.onload = function init() {
                 }
                 else if(topic === "light"){
                     newObject.light=serie.data[serie.data.length - 1].y;
+                }
+                else if(topic === "wifi"){
+                    newObject.wifi=serie.data[serie.data.length - 1].y;
                 }
                 displayEsp(myData);
                 for(let z=0;myData.length;z++){
@@ -174,36 +148,30 @@ window.onload = function init() {
             }
         });
     }
-
-    //=== Installation de la periodicite des requetes GET=============
     
     function process_esp(which_esps,i){
-	const refreshT = 100000 // Refresh period for chart
-	esp = which_esps[i];    // L'ESP "a dessiner"
-	//console.log(esp) // cf console du navigateur
-	
-	// Gestion de la temperature
-	// premier appel pour eviter de devoir attendre RefreshT
+	const refreshT = 100000 
+	esp = which_esps[i];    
 	get_samples('/esp/temp', chart1.series[i], esp);
-	//calls a function or evaluates an expression at specified
-	//intervals (in milliseconds).
 	window.setInterval(get_samples,
 			   refreshT,
-			   '/esp/temp',     // param 1 for get_samples()
-			   chart1.series[i],// param 2 for get_samples()
-			   esp);            // param 3 for get_samples()
+			   '/esp/temp',    
+			   chart1.series[i],
+			   esp);            
 
-	// Gestion de la lumiere
 	get_samples('/esp/light', chart2.series[i], esp);
 	window.setInterval(get_samples,
 			   refreshT,
-			   '/esp/light',     // URL to GET
-			   chart2.series[i], // Serie to fill
-			   esp);             // ESP targeted
+			   '/esp/light',     
+			   chart2.series[i],
+               esp);       
+    get_samples('/esp/wifi', chart3.series[i], esp);
+    window.setInterval(get_samples,
+                refreshT,
+                '/esp/wifi',     
+                chart3.series[i], 
+                esp);    
     }
-    
-
-    //=== Gestion de la flotte d'ESP =================================
 
     var which_esps = ["80:7D:3A:FD:D7:78",
 		      "80:7D:3A:FD:C2:F0",
@@ -223,6 +191,7 @@ function displayEsp(data){
     '<th scope="col">Mac</th>'+
     '<th scope="col">Temp</th>'+
     '<th scope="col">Light</th>'+
+    '<th scope="col">Wifi</th>'+
     '<th scope="col">Ping</th>'+
     '</tr>'+
     '</thead>'+
@@ -233,6 +202,7 @@ function displayEsp(data){
         '<td id="mac'+i+'"></td>'+
         '<td id="temp'+i+'"></td>'+
         '<td id="light'+i+'"></td>'+
+        '<td id="wifi'+i+'"></td>'+
         '<td><button id="btn'+i+'">ping</button></td>'+
       '</tr>';
     }
@@ -242,10 +212,10 @@ function displayEsp(data){
 
 function ping(mac){
     $.ajax({
-        url: node_url.concat("/esp/ping/"+mac), // URL to "GET" : /esp/temp ou /esp/light
+        url: node_url.concat("/esp/ping/"+mac), 
         type: 'GET',
         headers: { Accept: "application/json", },
-        success: function (resultat, statut) { // Anonymous function on success            
+        success: function (resultat, statut) {        
         },
         error: function (resultat, statut, erreur) {
         },
