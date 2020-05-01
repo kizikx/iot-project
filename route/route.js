@@ -5,5 +5,7 @@ module.exports = (app) => {
 
     app.post('/esp/:what', controller.getTopic);
 
+    app.post('/user', controller.addUser);
 
+    app.post('/login', controller.login)
 };

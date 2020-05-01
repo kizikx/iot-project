@@ -82,7 +82,6 @@ client_mqtt.on('message', function (topic, message) {
 	let frTime = new Date().toLocaleString("sv-SE", {timeZone: "Europe/Paris"});
 	
 	let topicname = path.parse(topic.toString()).base;
-	let tempCollection
 	switch (topicname){
 		case 'temp':
 			new_entry = new Temp();
@@ -97,7 +96,7 @@ client_mqtt.on('message', function (topic, message) {
 	new_entry.date=frTime;
 	new_entry.who=wh;
 	new_entry.value=val;
-	
+
 	try{
 		new_entry.save();
 	}
