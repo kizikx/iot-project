@@ -66,4 +66,25 @@ module.exports.logout = (req, res) => {
 };
 
 module.exports.updatePassword = (req, res) => {
+    if (!req.body) {
+        return res.status(400).send({
+            message: "User content can not be empty"
+        })
+    }
+  
+    User.findOne({username: req.params.username}, (err, foundObject) => {
+      if (req.body.password !== undefined) {
+        foundObject.password = req.body.password;
+      }
+
+      foundObject.save((err, updatedObject) => {
+          if (err) {
+              res.status(400).send({
+                  erreur: err.message
+              })
+          } else {
+              res.status(200).send(updatedObject)
+          }
+      })
+    })
 };
