@@ -6,6 +6,7 @@ module.exports = (req, res, next) => {
     const decodedToken = jwt.verify(token, 'RANDOM_TOKEN_SECRET');
     const userId = decodedToken.userId;
     const administrator = decodedToken.administrator;
+    console.log(administrator);
     if (administrator != true){
       res.status(401).json({
         error: new Error('unauthorized')

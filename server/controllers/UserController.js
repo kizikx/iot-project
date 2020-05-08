@@ -90,7 +90,7 @@ module.exports.updatePassword = (req, res) => {
     })
 };
 
-module.exports.updatePassword = (req, res) => {
+module.exports.updateRole = (req, res) => {
     if (!req.body) {
         return res.status(400).send({
             message: "User content can not be empty"
@@ -112,4 +112,25 @@ module.exports.updatePassword = (req, res) => {
           }
       })
     })
+};
+
+module.exports.deleteUser = (req, res) => {
+    User.findOneAndDelete({username:req.params.username})
+    .then(user => {
+        if(!user) {
+            return res.status(404).send({
+                message: "User not found with id " + req.params.username
+            });
+        }
+        res.send({message: "User deleted successfully!"});
+    }).catch(err => {
+        if(err.kind === 'ObjectId' || err.name === 'NotFound') {
+            return res.status(404).send({
+                message: "Username not found with username " + req.params.username
+            });                
+        }
+        return res.status(500).send({
+            message: "Could not delete username with username " + req.params.username
+        });
+    });
 };

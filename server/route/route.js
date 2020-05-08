@@ -16,6 +16,8 @@ module.exports = (app) => {
 
     app.patch('/user/:id', auth, userController.updatePassword);
 
+    app.delete('/user/:id', authAdmin, userController.deleteUser);
+
     app.post('/login', userController.login);
 
     app.post('/logout', auth, userController.logout);

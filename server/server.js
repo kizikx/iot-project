@@ -11,7 +11,6 @@ const bodyParser = require('body-parser');
 
 const app = express();
 
-//const controller = require('../controllers/controller');
 const controller = require('./controllers/controller');
 
 const Temp = require('./models/TempModel');
