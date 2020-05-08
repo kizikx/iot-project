@@ -3,6 +3,10 @@ module.exports = (app) => {
     const userController = require('../controllers/Usercontroller');
     const auth = require('../middleware/auth');
 
+    app.post('/esp', auth, controller.getAllEsp);
+
+    app.post('/esp/:id', auth, controller.getEspById);
+
     app.get('/esp/ping/:who', auth, controller.publishPing);
 
     app.post('/esp/:what', auth, controller.getTopic);

@@ -4,15 +4,20 @@ const mqtt = require('mqtt')
 const TOPIC_LIGHT = 'luciolesbleues/sensors/light'
 const TOPIC_TEMP  = 'luciolesbleues/sensors/temp'
 const TOPIC_WIFI  = 'luciolesbleues/wifi'
+const TOPIC_SUBSCRIBE = 'luciolesbleues/adhesions'
 
 const express = require('express');
 const bodyParser = require('body-parser');
 
 const app = express();
 
-const Temp = require('./models/TempModel')
-const Light = require('./models/LightModel')
-const Wifi = require('./models/WifiModel')
+//const controller = require('../controllers/controller');
+const controller = require('./controllers/controller');
+
+const Temp = require('./models/TempModel');
+const Light = require('./models/LightModel');
+const Wifi = require('./models/WifiModel');
+const Esp = require('./models/EspModel');
 
 app.use(bodyParser.urlencoded({ extended: true }))
 app.use(bodyParser.json())
@@ -25,7 +30,7 @@ app.use(function(request, response, next) {
 });
                  
 const mongoUrl = 'mongodb+srv://admin:G3Z4hkpUnyKjvK5U@cluster0-vptbp.mongodb.net/lucioles?retryWrites=true&w=majority';
-const mongoose = require('mongoose')
+const mongoose = require('mongoose');
 
 mongoose.connect(mongoUrl, {useUnifiedTopology: true, useNewUrlParser: true})
 .then(() => {
@@ -60,6 +65,11 @@ client_mqtt.subscribe(TOPIC_WIFI, function (err) {
 	console.log('Node Server has subscribed to ', TOPIC_WIFI);
 	}
 })
+client_mqtt.subscribe(TOPIC_SUBSCRIBE, function (err) {
+	if (!err) {
+	console.log('Node Server has subscribed to ', TOPIC_SUBSCRIBE);
+	}
+})
 })
 
 
@@ -68,8 +78,8 @@ client_mqtt.on('message', function (topic, message) {
 	console.log("Msg payload : ", message.toString());
 
 	message = JSON.parse(message);
-	wh = message.who
-	val = message.value
+	let wh = message.who
+	let val = message.value
 
 	let wholist = []
 	let index = wholist.findIndex(x => x.who==wh)
@@ -82,28 +92,35 @@ client_mqtt.on('message', function (topic, message) {
 	let frTime = new Date().toLocaleString("sv-SE", {timeZone: "Europe/Paris"});
 	
 	let topicname = path.parse(topic.toString()).base;
-	switch (topicname){
-		case 'temp':
-			new_entry = new Temp();
-			break;
-		case 'light':
-			new_entry = new Light();
-			break;
-		case 'wifi':
-			new_entry = new Wifi();
-			break;
+	let new_entry;
+	if (topicname === "subscribe"){
+		if(controller.getEspByMac(wh) == null){
+			controller.addEsp(wh,frTime);
+		}
 	}
-	new_entry.date=frTime;
-	new_entry.who=wh;
-	new_entry.value=val;
-
-	try{
-		new_entry.save();
+	else{
+		switch (topicname){
+			case 'temp':
+				new_entry = new Temp();
+				break;
+			case 'light':
+				new_entry = new Light();
+				break;
+			case 'wifi':
+				new_entry = new Wifi();
+				break;
+		}
+		new_entry.date=frTime;
+		new_entry.who=wh;
+		new_entry.value=val;
+	
+		try{
+			new_entry.save();
+		}
+		catch(e){
+			console.log(e);
+		}
 	}
-	catch(e){
-		console.log(e);
-	}
-
 }) 
 
 app.get('/', function (req, res) {
