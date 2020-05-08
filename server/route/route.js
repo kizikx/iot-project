@@ -12,15 +12,15 @@ module.exports = (app) => {
 
     app.post('/esp/:what', auth, controller.getTopic);
 
-    app.post('/user', userController.addUser);
-
-    app.patch('/user/:id', auth, userController.updatePassword);
-
-    app.delete('/user/:id', authAdmin, userController.deleteUser);
-
     app.post('/login', userController.login);
 
     app.post('/logout', auth, userController.logout);
 
-    app.patch('/user/:id/role', authAdmin, userController.updateRole);
+    app.post('/user', userController.addUser);
+
+    app.patch('/user/:username', auth, userController.updatePassword);
+
+    app.delete('/user/:username', authAdmin, userController.deleteUser);
+
+    app.patch('/user/:username/role', authAdmin, userController.updateRole);
 };
