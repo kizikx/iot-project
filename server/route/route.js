@@ -2,6 +2,7 @@ module.exports = (app) => {
     const controller = require('../controllers/controller');
     const userController = require('../controllers/Usercontroller');
     const auth = require('../middleware/auth');
+    const authAdmin = require('../middleware/authAdmin');
 
     app.post('/esp', auth, controller.getAllEsp);
 
@@ -15,7 +16,9 @@ module.exports = (app) => {
 
     app.patch('/user/:id', auth, userController.updatePassword);
 
-    app.post('/login', userController.login)
+    app.post('/login', userController.login);
 
-    app.post('/logout', auth, userController.logout)
+    app.post('/logout', auth, userController.logout);
+
+    app.patch('/user/:id/role', authAdmin, userController.updateRole);
 };

@@ -17,7 +17,6 @@ const controller = require('./controllers/controller');
 const Temp = require('./models/TempModel');
 const Light = require('./models/LightModel');
 const Wifi = require('./models/WifiModel');
-const Esp = require('./models/EspModel');
 
 app.use(bodyParser.urlencoded({ extended: true }))
 app.use(bodyParser.json())
@@ -93,7 +92,7 @@ client_mqtt.on('message', function (topic, message) {
 	
 	let topicname = path.parse(topic.toString()).base;
 	let new_entry;
-	if (topicname === "subscribe"){
+	if (topicname === "adhesions"){
 		if(controller.getEspByMac(wh) == null){
 			controller.addEsp(wh,frTime);
 		}
