@@ -63,42 +63,6 @@ module.exports.getEspById = (req, res) => {
     });
 };
 
-module.exports.updateEsp = (req, res) => {
-    if (!req.body) {
-        return res.status(400).send({
-            message: "User content can not be empty"
-        })
-    }
-  
-    Esp.findOne({username: req.params.username}, (err, foundObject) => {
-      if (req.body.name !== undefined) {
-        foundObject.name = req.body.name;
-      }
-
-      if (req.body.position.posX !== undefined) {
-        foundObject.position.posX = req.body.position.posX;
-      }
-
-      if (req.body.position.posY !== undefined) {
-        foundObject.position.posY = req.body.position.posY;
-      }
-
-      if (req.body.size !== undefined) {
-        foundObject.size = req.body.size;
-      }
-
-      foundObject.save((err, updatedObject) => {
-          if (err) {
-              res.status(400).send({
-                  erreur: err.message
-              })
-          } else {
-              res.status(200).send(updatedObject)
-          }
-      })
-    })
-};
-
 module.exports.getEspByMac = function(wh) {
     return Esp.findOne({who:wh});
 };
