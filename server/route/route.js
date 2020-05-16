@@ -16,7 +16,7 @@ module.exports = (app) => {
 
     app.post('/logout', auth, userController.logout);
 
-    app.post('/user', authAdmin, userController.addUser);
+    app.post('/user', userController.addUser);
 
     app.patch('/user/:username', auth, userController.updatePassword);
 
