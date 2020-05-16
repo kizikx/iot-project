@@ -8,6 +8,8 @@ module.exports = (app) => {
 
     app.post('/esp/:id', auth, controller.getEspById);
 
+    app.update('/esp/:id', auth, controller.updateEsp);
+
     app.get('/esp/ping/:who', auth, controller.publishPing);
 
     app.post('/esp/:what', auth, controller.getTopic);
