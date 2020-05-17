@@ -149,7 +149,7 @@ module.exports.getEspValuesByTopic = (req, res) => {
             break;
     }
 
-    tempCollection.find()
+    tempCollection.find(
         {_id:req.params.id})
     .then(items => {
         if(!items) {
