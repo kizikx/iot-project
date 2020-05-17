@@ -6,17 +6,15 @@ module.exports = (app) => {
 
     app.post('/esp', auth, controller.getAllEsp);
 
-    app.post('/esp/:id', auth, controller.getEspById);
+    app.get('/esp/:id', auth, controller.getEspById);
 
-    app.update('/esp/:id', auth, controller.updateEsp);
+    app.patch('/esp/:id', auth, controller.updateEsp);
 
     app.get('/esp/ping/:who', auth, controller.publishPing);
 
-    app.post('/esp/:what', auth, controller.getTopic);
+    app.get('/esp/:what', auth, controller.getTopic);
 
     app.post('/login', userController.login);
-
-    app.post('/logout', auth, userController.logout);
 
     app.post('/user', authAdmin, userController.addUser);
 
