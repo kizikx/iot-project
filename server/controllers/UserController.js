@@ -10,7 +10,8 @@ module.exports.addUser = (req, res) => {
     bcrypt.hash(req.body.password, saltRounds, function(err, hash) {
         let user = new User({
             username : req.body.username,
-            password : hash
+            password : hash,
+            administrator : req.body.administrator
         });
         user.save((err)=>{
             if(err){
