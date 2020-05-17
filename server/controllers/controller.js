@@ -131,3 +131,41 @@ module.exports.getTopic = (req, res) => {
             });
         });
 };
+
+module.exports.getEspValuesByTopic = (req, res) => {
+
+    wa = req.params.what ;
+    let tempCollection;
+
+    switch (wa){
+        case 'temp':
+            tempCollection = mongoose.model( "Temp" );
+            break;
+        case 'light':
+            tempCollection = mongoose.model( "Light" );
+            break;
+        case 'wifi':
+            tempCollection = mongoose.model( "Wifi" );
+            break;
+    }
+
+    tempCollection.find()
+        {_id:req.params.id})
+    .then(items => {
+        if(!items) {
+            return res.status(404).send({
+                message: "Esp not found with id " + req.params.id
+            });            
+        }
+        res.send(items);
+    }).catch(err => {
+        if(err.kind === 'ObjectId') {
+            return res.status(404).send({
+                message: "Esp not found with id " + req.params.id
+            });                
+        }
+        return res.status(500).send({
+            message: "Error retrieving esp with id " + req.params.id
+        });
+    });
+};

@@ -14,6 +14,8 @@ module.exports = (app) => {
 
     app.get('/esp/:what', auth, controller.getTopic);
 
+    app.get('/esp/:id/:what', auth, controller.getEspValuesByTopic);
+
     app.post('/login', userController.login);
 
     app.post('/user', authAdmin, userController.addUser);
