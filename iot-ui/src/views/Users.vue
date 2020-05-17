@@ -85,7 +85,10 @@ export default {
         ],
       }).then((response) => {
         if (response) {
-          console.log(`delete ${user}`);
+          this.$store.dispatch('users/deleteUser', user.username)
+            .then(() => {
+              this.$store.dispatch('users/getUsers');
+            });
         }
       });
     },

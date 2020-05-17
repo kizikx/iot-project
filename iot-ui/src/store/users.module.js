@@ -67,6 +67,19 @@ export default {
     updateFailure(state) {
       state.status = {};
     },
+    deleteRequest(state) {
+      state.status = {
+        deleting: true,
+      };
+    },
+    deleteSuccess(state) {
+      state.status = {
+        deleted: true,
+      };
+    },
+    deleteFailure(state) {
+      state.status = {};
+    },
   },
   actions: {
     login({ dispatch, commit }, { username, password }) {
@@ -137,6 +150,19 @@ export default {
           commit('updateFailure');
           dispatch('alert/pushToast', {
             message: 'Erreur lors de la mise à jour de l\'utilisateur',
+          }, { root: true });
+        });
+    },
+    deleteUser({ dispatch, commit }, username) {
+      commit('deleteRequest');
+
+      return usersService.deleteUser(username)
+        .then(() => {
+          commit('deleteSuccess');
+        }, () => {
+          commit('deleteFailure');
+          dispatch('alert/pushToast', {
+            message: 'Erreur lors de la suppression de l\'utilisateur',
           }, { root: true });
         });
     },
