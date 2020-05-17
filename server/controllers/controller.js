@@ -76,12 +76,14 @@ module.exports.updateEsp = (req, res) => {
         foundObject.name = req.body.name;
       }
 
-      if (req.body.position.posX !== undefined) {
-        foundObject.position.posX = req.body.position.posX;
-      }
+      if (req.body.position !== undefined) {
+        if (req.body.position.posX !== undefined) {
+            foundObject.position.posX = req.body.position.posX;
+        }
 
-      if (req.body.position.posY !== undefined) {
-        foundObject.position.posY = req.body.position.posY;
+        if (req.body.position.posY !== undefined) {
+            foundObject.position.posY = req.body.position.posY;
+        }
       }
 
       if (req.body.size !== undefined) {
