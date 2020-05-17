@@ -2,6 +2,7 @@
   <v-ons-page id="devices">
     <v-ons-pull-hook :action="loadItems"
       threshold-height="100px"
+      height="20px"
       @changestate="state = $event.state"
     >
       <span v-show="state === 'initial'">
