@@ -1,4 +1,4 @@
-# iot-front
+# iot-ui
 
 ## Project setup
 ```

@@ -1,0 +1,46 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width,initial-scale=1.0">
+    <link rel="icon" href="<%= BASE_URL %>favicon.ico">
+    <title><%= htmlWebpackPlugin.options.title %></title>
+    <style>
+      /* Extra small devices (portrait phones, less than 576px) */
+      @media (max-width: 575.98px) {
+        .hide-xs {
+          display: none;
+        }
+      }
+
+      /* Small devices (landscape phones, less than 768px) */
+      @media (max-width: 767.98px) {
+        .hide-sm {
+          display: none;
+        }
+      }
+
+      /* Medium devices (tablets, less than 992px) */
+      @media (max-width: 991.98px) {
+        .hide-md {
+          display: none;
+        }
+      }
+
+      /* Large devices (desktops, less than 1200px) */
+      @media (max-width: 1199.98px) {
+        .hide-lg {
+          display: none;
+        }
+      }
+    </style>
+  </head>
+  <body>
+    <noscript>
+      <strong>We're sorry but <%= htmlWebpackPlugin.options.title %> doesn't work properly without JavaScript enabled. Please enable it to continue.</strong>
+    </noscript>
+    <div id="app"></div>
+    <!-- built files will be auto injected -->
+  </body>
+</html>
