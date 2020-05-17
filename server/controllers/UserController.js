@@ -86,7 +86,7 @@ module.exports.updatePassword = (req, res) => {
       if (req.body.password !== undefined) {
             const saltRounds = 10;
             bcrypt.hash(req.body.password, saltRounds, function(err, hash) {
-              foundObject.password = req.body.password;
+              foundObject.password = hash;
               foundObject.save((err, updatedObject) => {
                 if (err) {
                     res.status(400).send({
