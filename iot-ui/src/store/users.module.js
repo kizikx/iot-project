@@ -54,6 +54,19 @@ export default {
     addFailure(state) {
       state.status = {};
     },
+    updateRequest(state) {
+      state.status = {
+        updating: true,
+      };
+    },
+    updateSuccess(state) {
+      state.status = {
+        updated: true,
+      };
+    },
+    updateFailure(state) {
+      state.status = {};
+    },
   },
   actions: {
     login({ dispatch, commit }, { username, password }) {
@@ -77,6 +90,8 @@ export default {
     },
     logout({ commit }) {
       usersService.logout();
+      commit('tabbar/set', 0, { root: true });
+      commit('splitter/toggle', false, { root: true });
       commit('logout');
       router.push('/login');
     },
@@ -109,6 +124,19 @@ export default {
           commit('addFailure');
           dispatch('alert/pushToast', {
             message: 'Erreur lors de la création de l\'utilisateur',
+          }, { root: true });
+        });
+    },
+    updateUser({ dispatch, commit }, { username, data }) {
+      commit('updateRequest');
+
+      return usersService.updateUser(username, data)
+        .then(() => {
+          commit('updateSuccess');
+        }, () => {
+          commit('updateFailure');
+          dispatch('alert/pushToast', {
+            message: 'Erreur lors de la mise à jour de l\'utilisateur',
           }, { root: true });
         });
     },

@@ -34,12 +34,12 @@
               <v-ons-icon
                 icon="ion-ios-create"
                 class="list-item__icon edit"
-                @click="editUser(user.id)"
+                @click="editUser(user)"
               ></v-ons-icon>
               <v-ons-icon
                 icon="ion-ios-trash"
                 class="list-item__icon delete"
-                @click="deleteUser(user.id)"
+                @click="deleteUser(user)"
               ></v-ons-icon>
             </div>
           </v-ons-list-item>
@@ -74,10 +74,10 @@ export default {
     addUser() {
       this.push(AddUser, 'Nouveau');
     },
-    editUser() {
-      this.push(EditUser, '');
+    editUser(user) {
+      this.push(EditUser, '', user);
     },
-    deleteUser(id) {
+    deleteUser(user) {
       this.$ons.notification.confirm('Êtes-vous sûr de vouloir supprimer cet utilisateur ?', {
         buttonLabels: [
           'Non',
@@ -85,7 +85,7 @@ export default {
         ],
       }).then((response) => {
         if (response) {
-          console.log(`delete ${id}`);
+          console.log(`delete ${user}`);
         }
       });
     },
