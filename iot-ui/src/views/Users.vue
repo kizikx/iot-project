@@ -1,12 +1,31 @@
 <template>
   <v-ons-page id="users">
+    <v-ons-pull-hook :action="loadItems"
+      threshold-height="100px"
+      height="20px"
+      @changestate="state = $event.state"
+    >
+      <span v-show="state === 'initial'">
+        Tirez pour actualiser
+      </span>
+      <span v-show="state ==='preaction'">
+        Tirez pour actualiser
+      </span>
+    </v-ons-pull-hook>
     <v-ons-row>
       <v-ons-col width="25%" class="hide-md"></v-ons-col>
       <v-ons-col>
+        <div class="center">
+          <v-ons-progress-circular
+            v-show="status.fetching"
+            indeterminate
+            class="loader-icon"
+          ></v-ons-progress-circular>
+        </div>
         <v-ons-list>
           <v-ons-list-item
             v-for="user in users"
-            :key="user.id"
+            :key="user._id"
           >
             <div class="center">
               {{ user.username }}
@@ -38,27 +57,22 @@
 </template>
 
 <script>
+import { mapState } from 'vuex';
 import AddUser from '@/views/AddUser.vue';
 import EditUser from '@/views/EditUser.vue';
 
 export default {
   data() {
     return {
-      users: [
-        {
-          id: '3bc45def',
-          username: 'User 1',
-        },
-        {
-          id: '34ed81ab',
-          username: 'User 2',
-        },
-      ],
+      state: 'initial',
     };
+  },
+  computed: {
+    ...mapState('users', ['status', 'users']),
   },
   methods: {
     addUser() {
-      this.push(AddUser, 'Nouvel utilisateur');
+      this.push(AddUser, 'Nouveau');
     },
     editUser() {
       this.push(EditUser, '');
@@ -73,6 +87,11 @@ export default {
         if (response) {
           console.log(`delete ${id}`);
         }
+      });
+    },
+    loadItems(done) {
+      this.$store.dispatch('users/getUsers').then(() => {
+        done();
       });
     },
     push(page, key, data = {}) {
@@ -90,6 +109,9 @@ export default {
       });
     },
   },
+  created() {
+    this.$store.dispatch('users/getUsers');
+  },
 };
 </script>
 
@@ -100,5 +122,9 @@ export default {
 
 .delete {
   color: #fe3824;
+}
+
+ons-progress-circular {
+  margin: 1em;
 }
 </style>
