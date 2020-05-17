@@ -88,8 +88,8 @@ module.exports.updatePassword = (req, res) => {
                 }
               })
             })
-      });
-    }
+      }
+    });
 };
 
 module.exports.updateRole = (req, res) => {
