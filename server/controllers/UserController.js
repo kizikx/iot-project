@@ -75,19 +75,21 @@ module.exports.updatePassword = (req, res) => {
   
     User.findOne({username: req.params.username}, (err, foundObject) => {
       if (req.body.password !== undefined) {
-        foundObject.password = req.body.password;
-      }
-
-      foundObject.save((err, updatedObject) => {
-          if (err) {
-              res.status(400).send({
-                  erreur: err.message
+            const saltRounds = 10;
+            bcrypt.hash(req.body.password, saltRounds, function(err, hash) {
+              foundObject.password = req.body.password;
+              foundObject.save((err, updatedObject) => {
+                if (err) {
+                    res.status(400).send({
+                        erreur: err.message
+                    })
+                } else {
+                    res.status(200).send(updatedObject)
+                }
               })
-          } else {
-              res.status(200).send(updatedObject)
-          }
-      })
-    })
+            })
+      });
+    }
 };
 
 module.exports.updateRole = (req, res) => {
