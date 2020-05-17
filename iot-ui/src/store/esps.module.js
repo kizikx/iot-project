@@ -42,17 +42,21 @@ export default {
     getESPs({ dispatch, commit }) {
       commit('espsRequest');
 
-      return espsService.getESPs()
-        .then((response) => {
-          setTimeout(() => {
-            commit('espsSuccess', response);
-          }, 500);
-        }, () => {
-          commit('espsFailure');
-          dispatch('alert/pushToast', {
-            message: 'Erreur lors de la récupération des ESPs',
-          }, { root: true });
-        });
+      return new Promise((resolve, reject) => {
+        espsService.getESPs()
+          .then((response) => {
+            setTimeout(() => {
+              commit('espsSuccess', response);
+              resolve();
+            }, 500);
+          }, () => {
+            commit('espsFailure');
+            dispatch('alert/pushToast', {
+              message: 'Erreur lors de la récupération des ESPs',
+            }, { root: true });
+            reject();
+          });
+      });
     },
     updateESP({ dispatch, commit }, { id, data }) {
       commit('updateRequest');
