@@ -4,7 +4,7 @@ module.exports = (app) => {
     const auth = require('../middleware/auth');
     const authAdmin = require('../middleware/authAdmin');
 
-    app.post('/esp', auth, controller.getAllEsp);
+    app.get('/esp', auth, controller.getAllEsp);
 
     app.get('/esp/:id', auth, controller.getEspById);
 
