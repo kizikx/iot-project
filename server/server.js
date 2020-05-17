@@ -21,9 +21,10 @@ app.use(bodyParser.urlencoded({ extended: true }))
 app.use(bodyParser.json())
 app.use(express.static(path.join(__dirname, '/')));
 app.use(function(request, response, next) { 
-    response.header("Access-Control-Allow-Origin", "*");
-    response.header("Access-Control-Allow-Headers", "*");
-    response.header("Access-Control-Allow-Methods", "POST, GET, OPTIONS, PUT, DELETE");
+	response.header("Access-Control-Allow-Origin", "http://localhost:8080");
+	response.header("Access-Control-Allow-Credentials", "true");
+    response.header("Access-Control-Allow-Headers", "authorization, content-type");
+    response.header("Access-Control-Allow-Methods", "POST, GET, OPTIONS, PUT, DELETE, PATCH");
     next();
 });
                  
