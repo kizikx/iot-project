@@ -36,10 +36,19 @@ function updateUser(username, data) {
   }).then((response) => response.data);
 }
 
+function deleteUser(username) {
+  return axios.delete(`/user/${username}`, {
+    headers: {
+      Authorization: `Basic ${localStorage.getItem('token')}`,
+    },
+  }).then((response) => response.data);
+}
+
 export default {
   login,
   logout,
   getUsers,
   addUser,
   updateUser,
+  deleteUser,
 };
