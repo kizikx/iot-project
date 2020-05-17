@@ -23,6 +23,17 @@ module.exports.addUser = (req, res) => {
 
 };
 
+module.exports.getAllUser = (req, res) => {
+    User.find()
+    .then(user => {
+        res.send(user);
+    }).catch(err => {
+        res.status(500).send({
+            message: err.message || "Some error occurred while retrieving users."
+        });
+    });
+  };
+
 module.exports.login = (req, res) => {
     User.findOne(
            {username:req.body.username})
@@ -62,9 +73,6 @@ module.exports.login = (req, res) => {
                 message: "Error retrieving user with username " + req.body.username
             });
         });
-};
-
-module.exports.logout = (req, res) => {
 };
 
 module.exports.updatePassword = (req, res) => {

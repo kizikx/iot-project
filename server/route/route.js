@@ -18,6 +18,8 @@ module.exports = (app) => {
 
     app.post('/user', authAdmin, userController.addUser);
 
+    app.get('/user', authAdmin, userController.getAllUser);
+
     app.patch('/user/:username', auth, userController.updatePassword);
 
     app.delete('/user/:username', authAdmin, userController.deleteUser);
