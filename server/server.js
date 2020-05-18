@@ -5,6 +5,7 @@ const TOPIC_LIGHT = 'luciolesbleues/sensors/light'
 const TOPIC_TEMP  = 'luciolesbleues/sensors/temp'
 const TOPIC_WIFI  = 'luciolesbleues/wifi'
 const TOPIC_SUBSCRIBE = 'luciolesbleues/adhesions'
+const TOPIC_SENSOR = 'luciolesbleues/sensors'
 
 const express = require('express');
 const bodyParser = require('body-parser');
@@ -71,6 +72,11 @@ client_mqtt.subscribe(TOPIC_SUBSCRIBE, function (err) {
 	console.log('Node Server has subscribed to ', TOPIC_SUBSCRIBE);
 	}
 })
+client_mqtt.subscribe(TOPIC_SENSOR, function (err) {
+	if (!err) {
+		console.log('Node Server has subscribed to ', TOPIC_SENSOR);
+	}
+})
 })
 
 
@@ -79,8 +85,10 @@ client_mqtt.on('message', function (topic, message) {
 	console.log("Msg payload : ", message.toString());
 
 	message = JSON.parse(message);
-	let wh = message.who
-	let val = message.value
+
+	let wh = message.id;
+	let sensor = message.sensor;
+	let val = message.value;
 
 	let wholist = []
 	let index = wholist.findIndex(x => x.who==wh)
@@ -95,12 +103,14 @@ client_mqtt.on('message', function (topic, message) {
 	let topicname = path.parse(topic.toString()).base;
 	let new_entry;
 	if (topicname === "adhesions"){
-		if(controller.getEspByMac(wh) == null){
-			controller.addEsp(wh,frTime);
-		}
+		controller.getEspByMac(wh).then(esp => {
+			if (esp === null) {
+				controller.addEsp(wh,frTime);
+			}
+		});
 	}
 	else{
-		switch (topicname){
+		switch (sensor){
 			case 'temp':
 				new_entry = new Temp();
 				break;
