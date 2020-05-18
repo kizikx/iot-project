@@ -17,11 +17,13 @@ const Temp = require('./models/TempModel');
 const Light = require('./models/LightModel');
 const Wifi = require('./models/WifiModel');
 
+app.use(express.static('dist'));
+
 app.use(bodyParser.urlencoded({ extended: true }))
 app.use(bodyParser.json())
 app.use(express.static(path.join(__dirname, '/')));
 app.use(function(request, response, next) { 
-	response.header("Access-Control-Allow-Origin", "http://localhost:8080");
+	response.header("Access-Control-Allow-Origin", "http://62.210.139.84:3000");
 	response.header("Access-Control-Allow-Credentials", "true");
     response.header("Access-Control-Allow-Headers", "authorization, content-type");
     response.header("Access-Control-Allow-Methods", "POST, GET, OPTIONS, PUT, DELETE, PATCH");
