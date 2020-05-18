@@ -182,6 +182,13 @@ void pub_data() {
 
   payload = "{\"id\":\"";
   payload += whoami;
+  payload += "\"}";
+
+  payload.toCharArray(data, (payload.length() + 1));
+  client.publish(TOPIC_ADHESION, data);
+
+  payload = "{\"id\":\"";
+  payload += whoami;
   payload += "\",\"sensor\":\"temp\",\"value\":";
   payload += get_temperature();
   payload += "}";
