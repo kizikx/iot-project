@@ -12,7 +12,7 @@ module.exports = (app) => {
 
     app.get('/esp/ping/:who', auth, controller.publishPing);
 
-    app.get('/esp/:what', auth, controller.getTopic);
+    app.get('/esp/topic/:what', auth, controller.getTopic);
 
     app.get('/esp/:id/:what', auth, controller.getEspValuesByTopic);
 
