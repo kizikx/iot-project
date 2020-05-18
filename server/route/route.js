@@ -1,6 +1,6 @@
 module.exports = (app) => {
     const controller = require('../controllers/controller');
-    const userController = require('../controllers/Usercontroller');
+    const userController = require('../controllers/UserController');
     const auth = require('../middleware/auth');
     const authAdmin = require('../middleware/authAdmin');
 
