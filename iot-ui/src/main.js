@@ -16,7 +16,7 @@ Vue.use(VueOnsen);
 
 Vue.component('custom-toolbar', CustomToolbar);
 
-axios.defaults.baseURL = 'http://localhost:3000';
+axios.defaults.baseURL = 'http://62.210.139.84:3000';
 axios.defaults.withCredentials = true;
 
 axios.interceptors.response.use((response) => response, (error) => {
