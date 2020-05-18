@@ -16,17 +16,17 @@ Vue.use(VueOnsen);
 
 Vue.component('custom-toolbar', CustomToolbar);
 
-axios.defaults.baseURL = 'http://62.210.139.84:8083';
+axios.defaults.baseURL = 'http://62.210.139.84:3000';
 axios.defaults.withCredentials = true;
 
-axios.interceptors.response.use((response) => response, (error) => {
-  /* If the session has expired, we redirect the user
-  to the login page */
+/* axios.interceptors.response.use((response) => response, (error) => {
+  // If the session has expired, we redirect the user
+  // to the login page
   if (error.response.status === 401) {
     localStorage.setItem('token', '');
     router.push('/login');
   }
-});
+}); */
 
 new Vue({
   router,
