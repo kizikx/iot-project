@@ -30,31 +30,6 @@
               </option>
             </v-ons-select>
           </div>
-          <div class="space-top">
-            <label for="name">
-              Nom de l'ESP
-            </label>
-            <br/>
-            <v-ons-input
-              id="name"
-              placeholder="ESP 1"
-              v-model="name"
-            ></v-ons-input>
-          </div>
-          <div class="space-top">
-            <label for="size">
-              Taille du point sur la carte
-            </label>
-            <v-ons-range
-              id="size"
-              placeholder="ESP 1"
-              v-model="size"
-              min="0.01"
-              max="0.25"
-              step="0.01"
-              style="display:block;width:25%;margin:0.5em"
-            ></v-ons-range>
-          </div>
         </v-ons-card>
         <div class="center">
           <v-ons-button
