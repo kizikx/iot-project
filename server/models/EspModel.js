@@ -7,7 +7,7 @@ let EspSchema = new Schema(
   {
     who: {type: String, required: true, unique: true},
     subscribeDate: {type: Date, required: true},
-    name: {type: String, required: true, unique: true},
+    name: {type: String, required: false, unique: true},
     position: {
       posX: { type: Number, lowercase: true, trim: true },
       posY: { type: Number, lowercase: true, trim: true }
