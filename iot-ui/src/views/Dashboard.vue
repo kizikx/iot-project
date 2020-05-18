@@ -31,14 +31,6 @@
             </v-ons-select>
           </div>
         </v-ons-card>
-        <div class="center">
-          <v-ons-button
-            modifier="outline"
-            style="margin: 6px 0"
-          >
-            Modifier la carte
-          </v-ons-button>
-        </div>
       </v-ons-col>
       <v-ons-col width="25%" class="hide-md"></v-ons-col>
     </v-ons-row>
