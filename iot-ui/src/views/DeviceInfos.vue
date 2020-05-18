@@ -18,6 +18,19 @@
           v-if="loaded"
           :chartdata="chartData"
           :options="options"
+          style="width: 95%"
+        ></line-chart>
+        <line-chart
+          v-if="loaded"
+          :chartdata="chartData"
+          :options="options"
+          style="width: 95%"
+        ></line-chart>
+        <line-chart
+          v-if="loaded"
+          :chartdata="chartData"
+          :options="options"
+          style="width: 95%"
         ></line-chart>
       </v-ons-col>
       <v-ons-col width="25%" class="hide-md"></v-ons-col>
@@ -34,20 +47,22 @@ export default {
   },
   data() {
     return {
-      loaded: false,
+      loaded: true,
       chartData: {
-        labels: ['January', 'February'],
+        labels: ['January', 'February', 'March', 'April'],
         datasets: [
           {
-            label: 'Data One',
             backgroundColor: '#f87979',
-            data: [40, 20],
+            data: [40, 20, 35, 12],
           },
         ],
       },
       options: {
         responsive: true,
         maintainAspectRatio: false,
+        legend: {
+          display: false,
+        },
       },
     };
   },
@@ -64,6 +79,13 @@ export default {
         second: '2-digit',
       });
     },
+  },
+  created() {
+    this.$store.dispatch('data/getDataByESP', {
+      // eslint-disable-next-line no-underscore-dangle
+      id: this.data._id,
+      topic: 'temp',
+    });
   },
 };
 </script>
