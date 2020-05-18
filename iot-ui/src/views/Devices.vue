@@ -92,7 +92,6 @@ export default {
     },
   },
   created() {
-    this.$store.dispatch('esps/getESPs');
   },
 };
 </script>
