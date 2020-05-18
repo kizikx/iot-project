@@ -17,6 +17,8 @@ const Temp = require('./models/TempModel');
 const Light = require('./models/LightModel');
 const Wifi = require('./models/WifiModel');
 
+app.use(express.static('dist'));
+
 app.use(bodyParser.urlencoded({ extended: true }))
 app.use(bodyParser.json())
 app.use(express.static(path.join(__dirname, '/')));
