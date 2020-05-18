@@ -76,6 +76,8 @@ void setup() {
 
   Serial.begin(9600);
 
+  connect_wifi();
+
   client.setServer(mqtt_server, mqtt_port);
   client.setCallback(mqtt_pubcallback);
 
