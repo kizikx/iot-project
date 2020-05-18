@@ -21,7 +21,7 @@ app.use(bodyParser.urlencoded({ extended: true }))
 app.use(bodyParser.json())
 app.use(express.static(path.join(__dirname, '/')));
 app.use(function(request, response, next) { 
-	response.header("Access-Control-Allow-Origin", "http://62.210.139.84:3001");
+	response.header("Access-Control-Allow-Origin", "http://62.210.139.84:3000");
 	response.header("Access-Control-Allow-Credentials", "true");
     response.header("Access-Control-Allow-Headers", "authorization, content-type");
     response.header("Access-Control-Allow-Methods", "POST, GET, OPTIONS, PUT, DELETE, PATCH");
@@ -128,6 +128,6 @@ res.sendFile(path.join(__dirname + '/ui_lucioles.html'));
 
 require('./route/route') (app);
 
-app.listen(process.env.PORT || 3001, () => {
-    console.log('Server listening on port 3001');
+app.listen(process.env.PORT || 3000, () => {
+    console.log('Server listening on port 3000');
 });
