@@ -25,7 +25,7 @@ float seuilClimatisationNuit = 21.0;
 float seuilChauffageJour = 18.0;
 float seuilChauffageNuit = 16.0;
 int seuilJourNuit = 100;
-const int32_t pub_period = 10 * 1000l; // Publication period
+const int32_t pub_period = 60 * 1000l; // Publication period
 
 
 
