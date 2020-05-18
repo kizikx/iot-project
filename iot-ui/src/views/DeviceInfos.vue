@@ -14,11 +14,6 @@
           <h5>Première connexion</h5>
           <p>{{ subscribeDate }}</p>
         </v-ons-card>
-        <line-chart
-          v-if="loaded"
-          :chartdata="chartData"
-          :options="options"
-        ></line-chart>
       </v-ons-col>
       <v-ons-col width="25%" class="hide-md"></v-ons-col>
     </v-ons-row>
@@ -26,29 +21,9 @@
 </template>
 
 <script>
-import LineChart from '@/components/LineChart.vue';
-
 export default {
-  components: {
-    LineChart,
-  },
   data() {
     return {
-      loaded: false,
-      chartData: {
-        labels: ['January', 'February'],
-        datasets: [
-          {
-            label: 'Data One',
-            backgroundColor: '#f87979',
-            data: [40, 20],
-          },
-        ],
-      },
-      options: {
-        responsive: true,
-        maintainAspectRatio: false,
-      },
     };
   },
   computed: {
@@ -64,6 +39,13 @@ export default {
         second: '2-digit',
       });
     },
+  },
+  created() {
+    this.$store.dispatch('data/getDataByESP', {
+      // eslint-disable-next-line no-underscore-dangle
+      id: this.data._id,
+      topic: 'temp',
+    });
   },
 };
 </script>

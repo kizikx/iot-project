@@ -1,12 +1,13 @@
 import Vue from 'vue';
 import Vuex from 'vuex';
 
-import navigator from './navigator.module';
-import splitter from './splitter.module';
-import tabbar from './tabbar.module';
-import alert from './alert.module';
-import users from './users.module';
-import esps from './esps.module';
+import navigator from '@/store/navigator.module';
+import splitter from '@/store/splitter.module';
+import tabbar from '@/store/tabbar.module';
+import alert from '@/store/alert.module';
+import users from '@/store/users.module';
+import esps from '@/store/esps.module';
+import data from '@/store/data.module';
 
 Vue.use(Vuex);
 
@@ -28,5 +29,6 @@ export default new Vuex.Store({
     alert,
     users,
     esps,
+    data,
   },
 });

@@ -7,7 +7,23 @@ export default {
     status: {},
     esps: [],
   },
-  getters: {},
+  getters: {
+    nameFromMAC: (state) => (mac) => {
+      const found = state.esps.find((esp) => esp.who === mac);
+      if (found) {
+        return found.name ? found.name : found.who;
+      }
+      return mac;
+    },
+    nameFromId: (state) => (id) => {
+      // eslint-disable-next-line no-underscore-dangle
+      const found = state.esps.find((esp) => esp._id === id);
+      if (found) {
+        return found.name ? found.name : found.who;
+      }
+      return '';
+    },
+  },
   mutations: {
     espsRequest(state) {
       state.status = {

@@ -9,8 +9,13 @@
           ref="image"
         ></div>
         <div class="center">
-          <small>Cliquez sur la carte pour placer un ESP ou
-            sur un des ESPs pour le supprimer</small>
+          <small>
+            Sélectionnez un ESP et cliquez sur la carte pour le placer
+            <br/>
+            ou
+            <br/>
+            Cliquez sur un des ESPs pour le supprimer
+          </small>
         </div>
         <hr/>
         <v-ons-card>
@@ -30,40 +35,7 @@
               </option>
             </v-ons-select>
           </div>
-          <div class="space-top">
-            <label for="name">
-              Nom de l'ESP
-            </label>
-            <br/>
-            <v-ons-input
-              id="name"
-              placeholder="ESP 1"
-              v-model="name"
-            ></v-ons-input>
-          </div>
-          <div class="space-top">
-            <label for="size">
-              Taille du point sur la carte
-            </label>
-            <v-ons-range
-              id="size"
-              placeholder="ESP 1"
-              v-model="size"
-              min="0.01"
-              max="0.25"
-              step="0.01"
-              style="display:block;width:25%;margin:0.5em"
-            ></v-ons-range>
-          </div>
         </v-ons-card>
-        <div class="center">
-          <v-ons-button
-            modifier="outline"
-            style="margin: 6px 0"
-          >
-            Modifier la carte
-          </v-ons-button>
-        </div>
       </v-ons-col>
       <v-ons-col width="25%" class="hide-md"></v-ons-col>
     </v-ons-row>
@@ -72,7 +44,7 @@
 
 <script>
 import OpenSeadragon from 'openseadragon';
-import { mapState } from 'vuex';
+import { mapState, mapGetters } from 'vuex';
 
 window.OpenSeadragon = OpenSeadragon;
 
@@ -82,17 +54,8 @@ export default {
       viewer: null,
       name: '',
       size: 0.01,
-      selected: 'abcdef',
-      available: [
-        {
-          value: 'abcdef',
-          text: 'ESP 1',
-        },
-        {
-          value: '123456',
-          text: 'ESP 2',
-        },
-      ],
+      selected: '',
+      available: [],
       source: [
         {
           type: 'image',
@@ -129,12 +92,32 @@ export default {
       return result;
     },
     overlayClick(event) {
-      console.log(event.target.id);
       this.viewer.removeOverlay(event.target.id);
+      this.$store.dispatch('esps/updateESP', {
+        id: event.target.id,
+        data: {
+          position: {},
+          size: 0.01,
+        },
+      });
+      this.available.push({
+        value: event.target.id,
+        text: this.nameFromId(event.target.id),
+      });
     },
     addedOverlayClick(event) {
-      console.log(event.originalEvent.target.id);
       this.viewer.removeOverlay(event.originalEvent.target.id);
+      this.$store.dispatch('esps/updateESP', {
+        id: event.originalEvent.target.id,
+        data: {
+          position: {},
+          size: 0.01,
+        },
+      });
+      this.available.push({
+        value: event.originalEvent.target.id,
+        text: this.nameFromId(event.originalEvent.target.id),
+      });
     },
     initViewer() {
       this.viewer = OpenSeadragon({
@@ -168,11 +151,9 @@ export default {
             return;
           }
 
-          console.log('canvas click');
           const webPoint = event.position;
           const viewportPoint = this.viewer.viewport.pointFromPixel(webPoint);
 
-          console.log(viewportPoint.toString());
           const elem = document.createElement('a');
           elem.id = this.selected;
           elem.className = 'highlight';
@@ -182,6 +163,15 @@ export default {
             width: this.size,
             height: this.size,
             location: new OpenSeadragon.Point(viewportPoint.x, viewportPoint.y),
+          });
+          this.$store.dispatch('esps/updateESP', {
+            id: this.selected,
+            data: {
+              position: {
+                posX: viewportPoint.x,
+                posY: viewportPoint.y,
+              },
+            },
           });
           // eslint-disable-next-line no-new, no-unused-vars
           const tracker = new OpenSeadragon.MouseTracker({
@@ -203,9 +193,31 @@ export default {
   },
   computed: {
     ...mapState('esps', ['esps']),
+    ...mapGetters('esps', ['nameFromId']),
   },
   mounted() {
-    this.initViewer();
+    this.$store.dispatch('esps/getESPs').then(() => {
+      this.esps.forEach((esp) => {
+        if (esp.position) {
+          this.source[0].overlays.push({
+            // eslint-disable-next-line no-underscore-dangle
+            id: esp._id,
+            x: esp.position.posX,
+            y: esp.position.posY,
+            width: esp.size,
+            height: esp.size,
+            className: 'highlight',
+          });
+        } else {
+          this.available.push({
+            // eslint-disable-next-line no-underscore-dangle
+            value: esp._id,
+            text: esp.name ? esp.name : esp.who,
+          });
+        }
+      });
+      this.initViewer();
+    });
   },
 };
 </script>
