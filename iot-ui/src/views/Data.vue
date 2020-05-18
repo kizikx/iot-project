@@ -5,21 +5,21 @@
       <v-ons-col>
         <h1 class="center">Températures</h1>
         <line-chart
-          v-if="tempLoaded"
+          v-if="tempLoaded && show"
           style="width:95%"
           :chartdata="tempData"
           :options="options"
         ></line-chart>
         <h1 class="center">Luminosités</h1>
         <line-chart
-          v-if="lightLoaded"
+          v-if="lightLoaded && show"
           style="width:95%"
           :chartdata="lightData"
           :options="options"
         ></line-chart>
         <h1 class="center">WiFi</h1>
         <line-chart
-          v-if="wifiLoaded"
+          v-if="wifiLoaded && show"
           style="width:95%"
           :chartdata="wifiData"
           :options="options"
@@ -40,6 +40,7 @@ export default {
   },
   data() {
     return {
+      show: true,
       tempLoaded: false,
       lightLoaded: false,
       wifiLoaded: false,
@@ -63,6 +64,12 @@ export default {
     ...mapGetters('esps', ['nameFromMAC']),
   },
   methods: {
+    rerender() {
+      this.show = false;
+      this.$nextTick(() => {
+        this.show = true;
+      });
+    },
     randomColor() {
       const r = Math.floor(Math.random() * 255);
       const g = Math.floor(Math.random() * 255);
@@ -101,32 +108,41 @@ export default {
       }
       return [dates, datasets];
     },
+    getData() {
+      const tempPromise = this.$store.dispatch('data/getDataByTopic', 'temp').then((data) => {
+        const [labels, datasets] = this.filter(data);
+        this.tempData = {
+          labels,
+          datasets,
+        };
+        this.tempLoaded = true;
+      });
+      const lightPromise = this.$store.dispatch('data/getDataByTopic', 'light').then((data) => {
+        const [labels, datasets] = this.filter(data);
+        this.lightData = {
+          labels,
+          datasets,
+        };
+        this.lightLoaded = true;
+      });
+      const wifiPromise = this.$store.dispatch('data/getDataByTopic', 'wifi').then((data) => {
+        const [labels, datasets] = this.filter(data);
+        this.wifiData = {
+          labels,
+          datasets,
+        };
+        this.wifiLoaded = true;
+      });
+      return Promise.all([tempPromise, lightPromise, wifiPromise]);
+    },
   },
   created() {
-    this.$store.dispatch('data/getDataByTopic', 'temp').then((data) => {
-      const [labels, datasets] = this.filter(data);
-      this.tempData = {
-        labels,
-        datasets,
-      };
-      this.tempLoaded = true;
-    });
-    this.$store.dispatch('data/getDataByTopic', 'light').then((data) => {
-      const [labels, datasets] = this.filter(data);
-      this.lightData = {
-        labels,
-        datasets,
-      };
-      this.lightLoaded = true;
-    });
-    this.$store.dispatch('data/getDataByTopic', 'wifi').then((data) => {
-      const [labels, datasets] = this.filter(data);
-      this.wifiData = {
-        labels,
-        datasets,
-      };
-      this.wifiLoaded = true;
-    });
+    this.getData();
+    setInterval(() => {
+      this.getData().then(() => {
+        this.rerender();
+      });
+    }, 10000);
   },
 };
 </script>
