@@ -7,7 +7,15 @@ export default {
     status: {},
     esps: [],
   },
-  getters: {},
+  getters: {
+    nameFromMAC: (state) => (mac) => {
+      const found = state.esps.find((esp) => esp.who === mac);
+      if (found) {
+        return found.name ? found.name : found.who;
+      }
+      return mac;
+    },
+  },
   mutations: {
     espsRequest(state) {
       state.status = {
